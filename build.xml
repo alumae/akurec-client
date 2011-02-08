@@ -1,0 +1,52 @@
+<project name="Ant Builder" default="jar" basedir=".">
+	<description>
+        Application build file.
+    </description>
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="build" location="build" />
+	<property name="build-classes" location="${build}/classes" />	
+	<property name="dist" location="${build}/dist"/>
+	<!-- change this value to the name of the application -->
+	<property name="app.name" value="akurec-client"/>
+
+	
+	
+	<target name="init">
+		<available property="keystore.exists" file="tempKeystore"/>
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build-classes}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac destdir="${build-classes}" >
+			<src path="${src}"/>
+			<classpath>
+				<fileset dir="${src}/lib" >
+					<include name="*.jar"/>
+				</fileset>
+			</classpath>
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile" description="generate the jar">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib" />
+
+		<jar jarfile="${dist}/lib/${app.name}.jar" basedir="${build-classes}" >
+			<include name="**/*"/>
+		</jar>
+	</target>
+
+	
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+	
+
+</project>
